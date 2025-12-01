@@ -72,12 +72,17 @@ jobs:
           EOF
 
       # 7️⃣ Register new Task Definition
-      - name: Register new Task Definition
-        id: register-task-def
+
+      - name: Register ECS Task Definition
+
+        id: taskdef-register
         run: |
-          aws ecs register-task-definition --cli-input-json file://task-def.json
+          aws ecs register-task-definition \
+             --cli-input-json file://task-def.json \
+            | tee taskdef-output.json
 
       # 8️⃣ Deploy to ECS Service
+
       - name: Deploy to ECS Service
         run: |
           TASK_DEF_ARN=$(jq -r '.taskDefinition.taskDefinitionArn' taskdef-output.json)
