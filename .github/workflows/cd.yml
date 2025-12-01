@@ -35,25 +35,25 @@ jobs:
         id: taskdef
         run: |
           cat <<EOF > taskdef.json
-            \"family\": \"image-analyzer-task\",
-            \"networkMode\": \"awsvpc\",
-            \"requiresCompatibilities\": [\"FARGATE\"],
-            \"cpu\": \"256\",
-            \"memory\": \"512\",
-            \"containerDefinitions\": [
+            "family": "image-analyzer-task",
+            "networkMode": "awsvpc",
+            "requiresCompatibilities": ["FARGATE"],
+            "cpu": "256",
+            "memory": "512",
+            "containerDefinitions": [
               {
-                \"name\": \"api\",
-                \"image\": \"914894372597.dkr.ecr.eu-central
+                "name": "api",
+                "image": "914894372597.dkr.ecr.eu-central
                "portMappings": [{"containerPort": 5000}],
 
-                \"environment\": [
-                  {\"name\": \"S3_BUCKET\", \"value\": \"tatiana-photo-analyzer3\"},
-                  {\"name\": \"DYNAMO_TABLE\", \"value\": \"ImageLabels\"}
+                "environment": [
+                  {"name": "S3_BUCKET", "value": "tatiana-photo-analyzer3"},
+                  {"name": "DYNAMO_TABLE", "value": "ImageLabels"}
                 ]
               }
             ]
           }
-           EOF
+          EOF
       # 7️⃣ Register new Task Definition
       - name: Register new Task Definition
         id: register-task-def
