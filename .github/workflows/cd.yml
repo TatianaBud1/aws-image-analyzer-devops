@@ -80,7 +80,9 @@ jobs:
       # 8️⃣ Deploy to ECS Service
       - name: Deploy to ECS Service
         run: |
-          aws ecs update-service \
+          TASK_DEF_ARN=$(jq -r '.taskDefinition.taskDefinitionArn' taskdef-output.json)
+           aws ecs update-service \ 
            --cluster image-analyzer-cluster-new \
           --service image-analyzer-service \
-          --force-new-deployment
+           --task-definition $TASK_DEF_ARN \ 
+           --force-new-deployment
