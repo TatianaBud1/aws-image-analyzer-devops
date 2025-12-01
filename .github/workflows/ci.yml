@@ -1,0 +1,31 @@
+name: CI
+
+on:
+  push:
+    branches: ["main"]
+
+jobs:
+  build-test:
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v4
+
+      - name: Set up Python
+        uses: actions/setup-python@v4
+        with:
+          python-version: "3.10"
+
+      - name: Install dependencies
+        run: pip install -r app/requirements.txt
+
+      - name: Basic test - import app
+        run: |
+          python - << 'EOF'
+          import app.main
+          print("App loaded OK")
+          EOF
+
+      - name: Build Docker image
+        run: docker build -t image-analyzer:latest .

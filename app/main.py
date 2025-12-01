@@ -3,35 +3,38 @@ import boto3
 
 app = Flask(__name__)
 
-# conectare AWS Rekognition și S3
-rekognition = boto3.client('rekognition', region_name='eu-central-1')
-s3 = boto3.client('s3')
-BUCKET = 'tatiana-photo-analyzer3'  # creează-l în AWS S3
+BUCKET = "tatiana-photo-analyzer3"
+TABLE = "ImageLabels"
 
-@app.route('/')
-def home():
-    return "Bun venit în aplicația Tatiana – Analiză imagini cu AWS Rekognition!"
+@app.route("/health")
+def health():
+    return {"status": "ok"}
 
-@app.route('/analyze', methods=['POST'])
-def analyze_image():
-    if 'image' not in request.files:
-        return jsonify({"eroare": "Nu a fost trimis niciun fișier"}), 400
+@app.route("/analyze", methods=["POST"])
+def analyze():
+    file = request.files["image"]
+    filename = file.filename
 
-    file = request.files['image']
-    try:
-        s3.upload_fileobj(file, BUCKET, file.filename)
-        result = rekognition.detect_labels(
-            Image={'S3Object': {'Bucket': BUCKET, 'Name': file.filename}},
-            MaxLabels=5
-        )
-        labels = [label['Name'] for label in result['Labels']]
-        return jsonify({
-            "imagine": file.filename,
-            "etichete_detectate": labels,
-            "numar_etichete": len(labels)
-        })
-    except Exception as e:
-        return jsonify({"eroare": str(e)}), 500
+    s3 = boto3.client("s3")
+    rekognition = boto3.client("rekognition")
+    dynamodb = boto3.client("dynamodb")
 
-if __name__ == '__main__':
-   app.run(host='0.0.0.0', port=8000, debug=True)
+    # 1. Urcare în S3
+    s3.upload_fileobj(file, BUCKET, filename)
+
+    # 2. Analiză cu Rekognition
+    result = rekognition.detect_labels(
+        Image={"S3Object": {"Bucket": BUCKET, "Name": filename}},
+        MaxLabels=5
+    )
+
+    # 3. Salvare în DynamoDB
+    dynamodb.put_item(
+        TableName=TABLE,
+        Item={
+            "image_name": {"S": filename},
+            "labels": {"S": str(result["Labels"])}
+        }
+    )
+
+    return jsonify(result["Labels"])
