@@ -111,4 +111,4 @@ jobs:
           --network-configuration "awsvpcConfiguration={subnets=[subnet-0028a19884ccf94d4,subnet-01c5f5a2b7e2f34c0],securityGroups=[sg-006cf290cd3c4f37b],assignPublicIp=ENABLED}"
            else
           echo "Service already exists. Continuing..."
-          fi
+           fi
