@@ -28,4 +28,4 @@ jobs:
           EOF
 
       - name: Build Docker image
-        run: docker build -t image-analyzer:latest .
+        run: docker build -t image-analyzer:latest -f infra/Dockerfile .

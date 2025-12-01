@@ -5,7 +5,7 @@ on:
     branches: ["main"]
     paths:
       - "app/**"
-      - "Dockerfile"
+      - "infra/Dockerfile"
       - ".github/workflows/cd.yml"
 
 jobs:
@@ -27,10 +27,10 @@ jobs:
         uses: aws-actions/amazon-ecr-login@v1
 
       - name: Build Docker image
-        run: docker build -t ${{ secrets.ECR_REPO }}:latest .
+        run: docker build -t 914894372597.dkr.ecr.eu-central-1.amazonaws.com/aws-image-analizer-devops:latest -f infra/Dockerfile .
 
-      - name: Push image to ECR
-        run: docker push ${{ secrets.ECR_REPO }}:latest
+      - name: Push Docker image to ECR
+        run: docker push 914894372597.dkr.ecr.eu-central-1.amazonaws.com/aws-image-analizer-devops:latest
 
       - name: Update ECS Task Definition
         id: taskdef
@@ -44,7 +44,7 @@ jobs:
             \"containerDefinitions\": [
               {
                 \"name\": \"api\",
-                \"image\": \"${{ secrets.ECR_REPO }}:latest\",
+                \"image\": \"914894372597.dkr.ecr.eu-central-1.amazonaws.com/aws-image-analizer-devops:latest\",
                 \"portMappings\": [{\"containerPort\": 5000}],
                 \"environment\": [
                   {\"name\": \"S3_BUCKET\", \"value\": \"tatiana-photo-analyzer3\"},
@@ -55,9 +55,7 @@ jobs:
           }" > task-def.json
 
       - name: Register Task Definition
-        run: |
-          aws ecs register-task-definition \
-            --cli-input-json file://task-def.json
+        run: aws ecs register-task-definition --cli-input-json file://task-def.json
 
       - name: Update ECS Service
         run: |
