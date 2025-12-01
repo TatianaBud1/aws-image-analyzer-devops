@@ -80,4 +80,7 @@ jobs:
       # 8️⃣ Deploy to ECS Service
       - name: Deploy to ECS Service
         run: |
-          aws ecs update-service --cluster image-analyzer-cluster --service image-analyzer-service --force-new-deployment
+          aws ecs update-service \
+           --cluster image-analyzer-cluster-new \
+          --service image-analyzer-service \
+          --force-new-deployment
