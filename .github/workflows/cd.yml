@@ -52,7 +52,8 @@ jobs:
                 ]
               }
             ]
-          }" > taskdef.json
+          }
+           EOF
       # 7️⃣ Register new Task Definition
       - name: Register new Task Definition
         id: register-task-def
