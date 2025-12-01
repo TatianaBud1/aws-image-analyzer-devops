@@ -34,7 +34,7 @@ jobs:
       - name: Update ECS Task Definition
         id: taskdef
         run: |
-          echo "{
+          cat <<EOF > taskdef.json
             \"family\": \"image-analyzer-task\",
             \"networkMode\": \"awsvpc\",
             \"requiresCompatibilities\": [\"FARGATE\"],
