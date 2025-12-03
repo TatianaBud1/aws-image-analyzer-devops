@@ -29,11 +29,11 @@ jobs:
 
       # 4️⃣ Build Docker image
       - name: Build Docker image
-        run: docker build -t 914894372597.dkr.ecr.eu-central-1.amazonaws.com/aws-image-analizer-devops:latest -f infra/Dockerfile .
+        run: docker build -t 914894372597.dkr.ecr.eu-central-1.amazonaws.com/aws-image-analyzer-devops:latest -f infra/Dockerfile .
 
       # 5️⃣ Push Docker image to ECR
       - name: Push Docker image to ECR
-        run: docker push 914894372597.dkr.ecr.eu-central-1.amazonaws.com/aws-image-analizer-devops:latest
+        run: docker push 914894372597.dkr.ecr.eu-central-1.amazonaws.com/aws-image-analyzer-devops:latest
 
       # 6️⃣ Create ECS Task Definition JSON
       - name: Update ECS Task Definition
@@ -50,7 +50,7 @@ jobs:
             "containerDefinitions": [
               {
                 "name": "api",
-                "image": "914894372597.dkr.ecr.eu-central-1.amazonaws.com/aws-image-analizer-devops:latest",
+                "image": "914894372597.dkr.ecr.eu-central-1.amazonaws.com/aws-image-analyzer-devops:latest",
                 "portMappings": [
                   {
                     "containerPort": 8000
