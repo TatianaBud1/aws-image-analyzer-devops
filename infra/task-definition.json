@@ -1,0 +1,31 @@
+{
+    "family": "image-analyzer-task",
+    "networkMode": "awsvpc",
+    "executionRoleArn": "arn:aws:iam::914894372597:role/ecsTaskExecutionRole",
+    "containerDefinitions": [
+        {
+            "name": "image-analyzer",
+            "image": "914894372597.dkr.ecr.eu-central-1.amazonaws.com/aws-image-analizer-devops:latest",
+            "portMappings": [
+                {
+                    "containerPort": 8000,
+                    "protocol": "tcp"
+                }
+            ],
+            "essential": true,
+            "logConfiguration": {
+                "logDriver": "awslogs",
+                "options": {
+                    "awslogs-group": "/ecs/image-analyzer-task",
+                    "awslogs-region": "eu-central-1",
+                    "awslogs-stream-prefix": "ecs"
+                }
+            }
+        }
+    ],
+    "requiresCompatibilities": [
+        "FARGATE"
+    ],
+    "cpu": "256",
+    "memory": "512"
+}

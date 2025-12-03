@@ -53,7 +53,7 @@ jobs:
                 "image": "914894372597.dkr.ecr.eu-central-1.amazonaws.com/aws-image-analizer-devops:latest",
                 "portMappings": [
                   {
-                    "containerPort": 5000
+                    "containerPort": 8000
                   }
                 ],
                 "environment": [
@@ -87,8 +87,8 @@ jobs:
         run: |
           TASK_DEF_ARN=$(jq -r '.taskDefinition.taskDefinitionArn' taskdef-output.json)
           aws ecs update-service \
-          --cluster image-analyzer-cluster-new \
-          --service image-analyzer-service \
+          --cluster tatiana-cluster \
+          --service-name tatiana-service \
           --task-definition $TASK_DEF_ARN \
           --force-new-deployment
 
@@ -103,12 +103,12 @@ jobs:
           if [ "$SERVICE_EXISTS" = "None" ]; then
           echo "Service not found. Creating new service..."
           aws ecs create-service \
-          --cluster image-analyzer-cluster-new \
-          --service-name image-analyzer-service \
+          --cluster tatiana-cluster \
+          --service-name tatiana-service \
           --task-definition $TASK_DEF_ARN \
           --desired-count 1 \
           --launch-type FARGATE \
-          --network-configuration "awsvpcConfiguration={subnets=[subnet-0028a19884ccf94d4,subnet-01c5f5a2b7e2f34c0],securityGroups=[sg-006cf290cd3c4f37b],assignPublicIp=ENABLED}"
+          --network-configuration "awsvpcConfiguration={subnets=[subnet-0124030d3021aca7f,subnet-07780412d1ccfac7f],securityGroups=[sg-04b68e83acff3730f],assignPublicIp=ENABLED}"
            else
           echo "Service already exists. Continuing..."
            fi
